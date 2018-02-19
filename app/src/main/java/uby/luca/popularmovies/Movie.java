@@ -1,10 +1,13 @@
 package uby.luca.popularmovies;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by uburti on 19/02/2018.
  */
 
-public class Movie {
+public class Movie implements Parcelable{
 
     private String title;
     private String poster;
@@ -18,6 +21,25 @@ public class Movie {
         this.plot = plot;
     }
 
+
+    protected Movie(Parcel in) {
+        title = in.readString();
+        poster = in.readString();
+        voteAverage = in.readString();
+        plot = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     public String getTitle() {
         return title;
@@ -49,5 +71,18 @@ public class Movie {
 
     public void setPlot(String plot) {
         this.plot = plot;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(poster);
+        dest.writeString(voteAverage);
+        dest.writeString(plot);
     }
 }

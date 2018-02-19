@@ -2,6 +2,7 @@ package uby.luca.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
     private ArrayList<Movie> movieList = new ArrayList<>();
     private Context mContext;
+    public static final String PARCELED_MOVIE="parceledMovie";
 
     MovieAdapter(Context context) {
         this.mContext = context;
@@ -68,8 +70,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
         @Override
         public void onClick(View v) {
+
             Intent intent = new Intent(mContext, DetailActivity.class);
-            intent.putExtra(Intent.EXTRA_TEXT, movieList.get(getAdapterPosition()).getTitle());
+            Bundle bundle =new Bundle();
+            bundle.putParcelable(PARCELED_MOVIE,movieList.get(getAdapterPosition()));
+            intent.putExtras(bundle);
+
             mContext.startActivity(intent);
         }
     }

@@ -3,4 +3,5 @@
     <string name="blank_description">blank description</string>
     <string name="most_popular">Most Popular</string>
     <string name="highest_rated">Highest rated</string>
+    <string name="error_movie_details">Error retrieving movie details</string>
 </resources>
