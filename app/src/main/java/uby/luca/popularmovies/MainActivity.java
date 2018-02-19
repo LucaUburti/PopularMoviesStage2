@@ -66,9 +66,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         switch (item.getItemId()) {
             case R.id.menu_highest_rated:
                 sortOrder = HIGHEST_RATED;
+                getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
                 return true;
             case R.id.menu_most_popular:
                 sortOrder = MOST_POPULAR;
+                getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -120,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
+
 
     }
 }
