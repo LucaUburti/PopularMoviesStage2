@@ -1,4 +1,4 @@
-package uby.luca.popularmoviesstage1;
+package uby.luca.popularmovies;
 
 /**
  * Created by uburti on 19/02/2018.

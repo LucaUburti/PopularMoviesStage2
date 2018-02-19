@@ -1,4 +1,4 @@
-package uby.luca.popularmoviesstage1;
+package uby.luca.popularmovies;
 
 import org.junit.Test;
 

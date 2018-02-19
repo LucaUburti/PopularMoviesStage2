@@ -1,4 +1,4 @@
-package uby.luca.popularmoviesstage1;
+package uby.luca.popularmovies;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -25,9 +25,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         this.mContext = context;
     }
 
-    void add(Movie movie) {
+    void add(Movie movie) { //single movie added
         movieList.add(movie);
         notifyItemInserted(movieList.size() - 1);
+    }
+    void add(ArrayList<Movie> movieList){ //whole list added
+        this.movieList=movieList;
+        notifyDataSetChanged();
     }
 
     @Override

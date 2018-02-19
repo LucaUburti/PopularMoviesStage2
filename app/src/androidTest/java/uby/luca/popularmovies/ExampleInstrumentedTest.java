@@ -1,4 +1,4 @@
-package uby.luca.popularmoviesstage1;
+package uby.luca.popularmovies;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("uby.luca.popularmoviesstage1", appContext.getPackageName());
+        assertEquals("uby.luca.popularmovies", appContext.getPackageName());
     }
 }
