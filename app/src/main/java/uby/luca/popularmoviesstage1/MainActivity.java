@@ -25,16 +25,15 @@ public class MainActivity extends AppCompatActivity {
         mainRv.setLayoutManager(layoutManager);
 
         MovieAdapter mAdapter = new MovieAdapter(this);
-        mAdapter.add("http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg");
-        mAdapter.add("http://image.tmdb.org/t/p/w185//u351Rsqu5nd36ZpbWxIpd3CpbJW.jpg");
-        mAdapter.add("http://image.tmdb.org/t/p/w185//itdfycoMpjGWiGdjLUKMdAe9oQ5.jpg");
-        mAdapter.add("http://image.tmdb.org/t/p/w185//wVQch5MdY87uKwsoIyBLRQt7oND.jpg");
-        mAdapter.add("http://image.tmdb.org/t/p/w185//6s5SuHiUCfx7KYCqzlnem82tpYn.jpg");
-        mAdapter.add("http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg");
-        mAdapter.add("http://image.tmdb.org/t/p/w185//u351Rsqu5nd36ZpbWxIpd3CpbJW.jpg");
-        mAdapter.add("http://image.tmdb.org/t/p/w185//itdfycoMpjGWiGdjLUKMdAe9oQ5.jpg");
-        mAdapter.add("http://image.tmdb.org/t/p/w185//wVQch5MdY87uKwsoIyBLRQt7oND.jpg");
-        mAdapter.add("http://image.tmdb.org/t/p/w185//6s5SuHiUCfx7KYCqzlnem82tpYn.jpg");
+
+        //loadJsonFromTMDB
+        Movie movie1=new Movie("Film Uno","http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg","voto 10", "Descrizione di un film molto bello" );
+        Movie movie2=new Movie("Film Due","http://image.tmdb.org/t/p/w185//u351Rsqu5nd36ZpbWxIpd3CpbJW.jpg","voto 0", "Descrizione di un film molto brutto" );
+
+
+        mAdapter.add(movie1);
+        mAdapter.add(movie2);
+
         mainRv.setAdapter(mAdapter);
 
 

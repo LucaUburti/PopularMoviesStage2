@@ -18,15 +18,15 @@ import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder> {
 
-    private ArrayList<String> movieList = new ArrayList<>();
+    private ArrayList<Movie> movieList = new ArrayList<>();
     private Context mContext;
 
     MovieAdapter(Context context) {
         this.mContext = context;
     }
 
-    void add(String imageUrl) {
-        movieList.add(imageUrl);
+    void add(Movie movie) {
+        movieList.add(movie);
         notifyItemInserted(movieList.size() - 1);
     }
 
@@ -38,11 +38,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
     @Override
     public void onBindViewHolder(MovieHolder holder, int position) {
-        String imageUrl = movieList.get(position);
+        Movie movie = movieList.get(position);
+
         Picasso.with(mContext)
-                .load(imageUrl)
+                .load(movie.getPoster())
                 .placeholder(R.drawable.loading_popcorn)
-                .error(R.drawable.ic_launcher_background)
+                .error(R.drawable.img_not_found)
                 .into(holder.movieIv);
     }
 
