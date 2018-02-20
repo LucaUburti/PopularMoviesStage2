@@ -74,6 +74,7 @@ public class NetworkUtils {
         final String JSON_POSTER_KEY = "poster_path";
         final String JSON_VOTEAVERAGE_KEY = "vote_average";
         final String JSON_PLOT_KEY = "overview";
+        final String JSON_DATE_KEY = "release_date";
         final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/w185/";
 
 
@@ -88,7 +89,8 @@ public class NetworkUtils {
             String poster = POSTER_BASE_URL+ jsonCurrentMovie.optString(JSON_POSTER_KEY);
             String voteAverage = jsonCurrentMovie.optString(JSON_VOTEAVERAGE_KEY);
             String plot = jsonCurrentMovie.optString(JSON_PLOT_KEY);
-            Movie currentMovie = new Movie(title, poster, voteAverage, plot);
+            String releaseDate=jsonCurrentMovie.optString(JSON_DATE_KEY);
+            Movie currentMovie = new Movie(title, poster, voteAverage, plot, releaseDate);
             movieList.add(currentMovie);
         }
 

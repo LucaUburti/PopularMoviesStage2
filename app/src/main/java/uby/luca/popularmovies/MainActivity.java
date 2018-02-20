@@ -1,6 +1,8 @@
 package uby.luca.popularmovies;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     RecyclerView mainRv;
     static final int HIGHEST_RATED = 1;
     static final int MOST_POPULAR = 2;
-    int sortOrder = HIGHEST_RATED;//default sort order
+    int sortOrder = MOST_POPULAR;//default sort order
     int LOADER_ID = 37;
     static final String QUERY_URL_KEY = "QUERY_URL_KEY";
     MovieAdapter mAdapter;
@@ -42,15 +44,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         LinearLayoutManager layoutManager = new GridLayoutManager(this, 2);
         mainRv.setLayoutManager(layoutManager);
-
         mAdapter = new MovieAdapter(this);
 
-
-        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
-
+        if (!isOnline()) {
+            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show();
+        } else {
+            getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        }
 
     }
 
@@ -64,13 +66,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_highest_rated:
+            case R.id.highest_rated:
                 sortOrder = HIGHEST_RATED;
-                getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+                if (!isOnline()) {
+                    Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show();
+                } else {
+                    getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+                }
                 return true;
             case R.id.menu_most_popular:
                 sortOrder = MOST_POPULAR;
-                getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+                if (!isOnline()) {
+                    Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show();
+                } else {
+                    getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -98,8 +108,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.d("MainActivity","URL: " + url.toString());
-                Log.d("MainActivity","JSON: " + jsonResults);
                 return movieList;
             }
 
@@ -124,5 +132,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
 
 
+    }
+
+    // from Stack Overflow:
+    //    https://stackoverflow.com/questions/1560788/how-to-check-internet-access-on-android-inetaddress-never-times-out
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

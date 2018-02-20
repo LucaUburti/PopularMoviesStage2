@@ -18,6 +18,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.description_tv) TextView descriptionTv;
     @BindView(R.id.poster_iv) ImageView posterIv;
     @BindView(R.id.average_vote_tv) TextView averageVoteTv;
+    @BindView(R.id.release_date_tv) TextView releaseDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,11 @@ public class DetailActivity extends AppCompatActivity {
                 titleTv.setText(movie.getTitle());
                 descriptionTv.setText(movie.getPlot());
 
-                averageVoteTv.setText(movie.getVoteAverage());
+                String formattedVote=movie.getVoteAverage()+"/10";
+                averageVoteTv.setText(formattedVote);
+
+                String formattedDate=movie.getReleaseDate().replace("-","/");
+                releaseDate.setText(formattedDate);
 
                 Picasso.with(this)
                         .load(movie.getPoster())

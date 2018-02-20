@@ -7,18 +7,22 @@ import android.os.Parcelable;
  * Created by uburti on 19/02/2018.
  */
 
+
 public class Movie implements Parcelable{
 
     private String title;
     private String poster;
     private String voteAverage;
     private String plot;
+    private String releaseDate;
 
-    public Movie(String title, String poster, String voteAverage, String plot) {
+
+    public Movie(String title, String poster, String voteAverage, String plot, String releaseDate) {
         this.title = title;
         this.poster = poster;
         this.voteAverage = voteAverage;
         this.plot = plot;
+        this.releaseDate=releaseDate;
     }
 
 
@@ -27,6 +31,7 @@ public class Movie implements Parcelable{
         poster = in.readString();
         voteAverage = in.readString();
         plot = in.readString();
+        releaseDate=in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -73,6 +78,14 @@ public class Movie implements Parcelable{
         this.plot = plot;
     }
 
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -84,5 +97,6 @@ public class Movie implements Parcelable{
         dest.writeString(poster);
         dest.writeString(voteAverage);
         dest.writeString(plot);
+        dest.writeString(releaseDate);
     }
 }

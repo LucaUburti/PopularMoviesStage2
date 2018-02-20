@@ -12,12 +12,13 @@
     <TextView
         android:id="@+id/title_tv"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/detail_header_dimension"
+        android:layout_height="wrap_content"
         tools:text="Interstellar"
         android:textColor="@android:color/white"
-        android:textSize="28sp"
+        android:textSize="24sp"
         android:gravity="center"
         android:background="@color/colorAccent"
+        android:padding="@dimen/default_text_padding"
         />
 
     <LinearLayout
@@ -43,17 +44,31 @@
             android:padding="@dimen/default_text_padding"
  >
             <TextView
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/average_vote"
+                android:textStyle="bold"
 />
 
             <TextView
+
                 android:id="@+id/average_vote_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="8.4"
-/>
+                tools:text="8.4"/>
+
+            <TextView
+                android:paddingTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/release_date"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/release_date_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="2015/12/07"/>
 
         </LinearLayout>
 

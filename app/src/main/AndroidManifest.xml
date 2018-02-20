@@ -3,6 +3,8 @@
     package="uby.luca.popularmovies">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--https://stackoverflow.com/questions/1560788/how-to-check-internet-access-on-android-inetaddress-never-times-out-->
 
     <application
         android:allowBackup="true"
