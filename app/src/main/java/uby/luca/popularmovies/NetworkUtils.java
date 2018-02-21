@@ -2,6 +2,7 @@ package uby.luca.popularmovies;
 
 import android.net.Uri;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,24 +20,26 @@ import java.util.Scanner;
  */
 
 class NetworkUtils {
-    private static final String THE_MOVIE_DATABASE_URL = "https://api.themoviedb.org/3/discover/movie";
+    //private static final String THE_MOVIE_DATABASE_URL = "https://api.themoviedb.org/3/discover/movie"; wrong endpoint!
+    private static final String THE_MOVIE_DATABASE_URL = "https://api.themoviedb.org/3/movie";
 
 
     public static URL buildURL(int sortOrder, String apiKey) {
         String PARAM_API_KEY = "api_key";
-        String PARAM_SORT_BY = "sort_by";
+        //String PARAM_SORT_BY = "sort_by";
 
-        String sortValue = "";
+        String sortPath = "";
         if (sortOrder == MainActivity.HIGHEST_RATED) {
-            sortValue = "vote_average.desc";
+            sortPath = "top_rated";
         }
         if (sortOrder == MainActivity.MOST_POPULAR) {
-            sortValue = "popularity.desc";
+            sortPath = "popular";
         }
 
         Uri builtUri = Uri.parse(THE_MOVIE_DATABASE_URL).buildUpon()
+                .appendPath(sortPath)
                 .appendQueryParameter(PARAM_API_KEY, apiKey)
-                .appendQueryParameter(PARAM_SORT_BY, sortValue)
+                //.appendQueryParameter(PARAM_SORT_BY, sortPath)
                 .build();
         URL url = null;
         try {
@@ -44,6 +47,7 @@ class NetworkUtils {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+
         return url;
     }
 
