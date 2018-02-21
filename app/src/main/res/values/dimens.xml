@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="poster_dimensions">128dp</dimen>
-    <dimen name="detail_header_dimension">64dp</dimen>
     <dimen name="default_text_padding">8dp</dimen>
 </resources>

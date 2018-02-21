@@ -1,26 +1,20 @@
 package uby.luca.popularmovies;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -32,10 +26,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     RecyclerView mainRv;
     static final int HIGHEST_RATED = 1;
     static final int MOST_POPULAR = 2;
-    int sortOrder = MOST_POPULAR;//default sort order
-    int LOADER_ID = 37;
-    static final String QUERY_URL_KEY = "QUERY_URL_KEY";
-    MovieAdapter mAdapter;
+    private int sortOrder = MOST_POPULAR;//default sort order
+    private final int LOADER_ID = 37;
+    private MovieAdapter mAdapter;
 
 
     @Override
@@ -44,7 +37,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        LinearLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        LinearLayoutManager layoutManager;
+
+        // from Stack Overflow:
+        //https://stackoverflow.com/questions/3663665/how-can-i-get-the-current-screen-orientation
+        int orientation = this.getResources().getConfiguration().orientation;
+        if (orientation== Configuration.ORIENTATION_PORTRAIT){
+            layoutManager = new GridLayoutManager(this, 2);
+        } else {
+            layoutManager = new GridLayoutManager(this, 4);
+        }
+
+
         mainRv.setLayoutManager(layoutManager);
         mAdapter = new MovieAdapter(this);
 
@@ -89,33 +93,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<ArrayList<Movie>>(this) {
-            @Nullable
-            @Override
-            public ArrayList<Movie> loadInBackground() {
-                URL url = NetworkUtils.buildURL(sortOrder, getString(R.string.APIKEY));
-
-                String jsonResults = null;
-                try {
-                    jsonResults = NetworkUtils.readFromURL(url);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                ArrayList<Movie> movieList = null;
-                try {
-                    movieList = NetworkUtils.parseJsonResults(jsonResults);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return movieList;
-            }
-
-            @Override
-            protected void onStartLoading() {
-                forceLoad();
-            }
-        };
+        return new MovieAsyncTaskLoader(this, sortOrder);
     }
 
     @Override
@@ -136,10 +114,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     // from Stack Overflow:
     //    https://stackoverflow.com/questions/1560788/how-to-check-internet-access-on-android-inetaddress-never-times-out
-    public boolean isOnline() {
+    private boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        NetworkInfo netInfo = null;
+        if (cm != null) {
+            netInfo = cm.getActiveNetworkInfo();
+        }
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

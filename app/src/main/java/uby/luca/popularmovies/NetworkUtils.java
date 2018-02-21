@@ -1,8 +1,6 @@
 package uby.luca.popularmovies;
 
-import android.content.Context;
 import android.net.Uri;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +18,7 @@ import java.util.Scanner;
  * Created by uburti on 19/02/2018.
  */
 
-public class NetworkUtils {
+class NetworkUtils {
     private static final String THE_MOVIE_DATABASE_URL = "https://api.themoviedb.org/3/discover/movie";
 
 
