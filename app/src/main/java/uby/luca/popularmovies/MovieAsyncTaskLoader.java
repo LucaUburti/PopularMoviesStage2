@@ -26,7 +26,7 @@ class MovieAsyncTaskLoader extends AsyncTaskLoader<ArrayList<Movie>> {
     @Nullable
     @Override
     public ArrayList<Movie> loadInBackground() {
-        URL url = NetworkUtils.buildURL(sortOrder, getContext().getString(R.string.APIKEY));
+        URL url = NetworkUtils.buildURL(sortOrder, BuildConfig.API_KEY);
 
         String jsonResults = null;
         try {

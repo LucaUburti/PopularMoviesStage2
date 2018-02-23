@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
         if (data == null) {
-            Toast.makeText(getParent().getApplicationContext(), "data è null!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getParent().getApplicationContext(), R.string.returned_data_is_null, Toast.LENGTH_SHORT).show();
         } else {
             mAdapter.add(data);
             mainRv.setAdapter(mAdapter);

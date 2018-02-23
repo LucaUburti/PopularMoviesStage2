@@ -7,4 +7,5 @@
     <string name="average_vote">Average vote</string>
     <string name="release_date">Release Date</string>
     <string name="not_connected">You are not connected to the Internet</string>
+    <string name="returned_data_is_null">returned data is null!</string>
 </resources>
