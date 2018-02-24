@@ -1,13 +1,9 @@
 # PopularMoviesStage1
 
-In order to use the API key you have to create a new resource "api_key.xml" in /res/values
-
-Inside it you specify a string named "APIKEY" with a valid API key inside. For example:
-
+In order to use your API key you have to insert the key API_KEY into the gradle.properties file:
 ```
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="APIKEY">123465789</string>
-</resources>
+API_KEY = "1234567890"
 ```
+
+
 
