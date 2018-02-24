@@ -1,6 +1,7 @@
 package uby.luca.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,7 +21,9 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Movie>> {
+import static uby.luca.popularmovies.MovieAdapter.PARCELED_MOVIE;
+
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Movie>>, MovieAdapter.MovieOnClickHandler{
 
     @BindView(R.id.main_rv)
     RecyclerView mainRv;
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
         mainRv.setLayoutManager(layoutManager);
-        mAdapter = new MovieAdapter(this);
+        mAdapter = new MovieAdapter(this, this);
 
         if (!isOnline()) {
             Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show();
@@ -122,5 +125,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             netInfo = cm.getActiveNetworkInfo();
         }
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    @Override
+    public void movieOnClickImplementation(Movie clickedMovie) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        Bundle bundle =new Bundle();
+        bundle.putParcelable(PARCELED_MOVIE,clickedMovie);
+        intent.putExtras(bundle);
+
+        startActivity(intent);
+
     }
 }
