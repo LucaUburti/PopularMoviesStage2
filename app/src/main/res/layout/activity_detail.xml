@@ -83,20 +83,20 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/default_text_padding"
             tools:text="Description goes here" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/trailer_rv"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="horizontal">
-        </android.support.v7.widget.RecyclerView>
+            android:orientation="horizontal"
+            android:scrollbars="horizontal" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/review_rv"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
     </LinearLayout>
 
 </ScrollView>

@@ -20,13 +20,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
     private ArrayList<Movie> movieList = new ArrayList<>();
     private Context mContext;
-    static final String PARCELED_MOVIE="parceledMovie";
+    static final String PARCELED_MOVIE = "parceledMovie";
 
     private final MovieOnClickHandler movieOnClickHandler;
 
     MovieAdapter(Context context, MovieOnClickHandler movieOnClickHandler) {
         this.mContext = context;
-        this.movieOnClickHandler=movieOnClickHandler;
+        this.movieOnClickHandler = movieOnClickHandler;
     }
 
 
@@ -38,8 +38,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         movieList.add(movie);
         notifyItemInserted(movieList.size() - 1);
     }
-    void add(ArrayList<Movie> movieList){ //whole list added
-        this.movieList=movieList;
+
+    void add(ArrayList<Movie> movieList) { //whole list added
+        this.movieList = movieList;
         notifyDataSetChanged();
     }
 
@@ -53,6 +54,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
     public void onBindViewHolder(MovieHolder holder, int position) {
         Movie movie = movieList.get(position);
 
+        holder.movieIv.setContentDescription(movie.getTitle());
         Picasso.with(mContext)
                 .load(movie.getPoster())
                 .placeholder(R.drawable.loading_popcorn)
@@ -65,7 +67,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         return movieList.size();
     }
 
-    class MovieHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class MovieHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView movieIv;
 
         MovieHolder(View view) {

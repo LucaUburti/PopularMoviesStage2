@@ -56,7 +56,7 @@ class NetworkUtils {
 
     public static URL buildTrailerURL(String apiKey, String movieId) {
         String PARAM_API_KEY = "api_key";
-        String TRAILER_PATH="videos";
+        String TRAILER_PATH = "videos";
 
         Uri builtUri = Uri.parse(THE_MOVIE_DATABASE_URL).buildUpon()
                 .appendPath(movieId)
@@ -69,7 +69,26 @@ class NetworkUtils {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, "buildTrailerURL: "+ url.toString());
+        Log.d(TAG, "buildTrailerURL: " + url.toString());
+        return url;
+    }
+
+    public static URL buildReviewURL(String apiKey, String movieId) {
+        String PARAM_API_KEY = "api_key";
+        String REVIEW_PATH = "reviews";
+
+        Uri builtUri = Uri.parse(THE_MOVIE_DATABASE_URL).buildUpon()
+                .appendPath(movieId)
+                .appendPath(REVIEW_PATH)
+                .appendQueryParameter(PARAM_API_KEY, apiKey)
+                .build();
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "buildReviewURL: " + url.toString());
         return url;
     }
 
@@ -110,12 +129,12 @@ class NetworkUtils {
         for (int i = 0; i < jsonMovies.length(); i++) {
             JSONObject jsonCurrentMovie = jsonMovies.getJSONObject(i);
 
-            String movieId =jsonCurrentMovie.optString(JSON_MOVIEID_KEY);
+            String movieId = jsonCurrentMovie.optString(JSON_MOVIEID_KEY);
             String title = jsonCurrentMovie.optString(JSON_TITLE_KEY);
-            String poster = POSTER_BASE_URL+ jsonCurrentMovie.optString(JSON_POSTER_KEY);
+            String poster = POSTER_BASE_URL + jsonCurrentMovie.optString(JSON_POSTER_KEY);
             String voteAverage = jsonCurrentMovie.optString(JSON_VOTEAVERAGE_KEY);
             String plot = jsonCurrentMovie.optString(JSON_PLOT_KEY);
-            String releaseDate=jsonCurrentMovie.optString(JSON_DATE_KEY);
+            String releaseDate = jsonCurrentMovie.optString(JSON_DATE_KEY);
             Movie currentMovie = new Movie(movieId, title, poster, voteAverage, plot, releaseDate);
             movieList.add(currentMovie);
         }
@@ -135,10 +154,31 @@ class NetworkUtils {
             JSONObject jsonCurrentTrailer = jsonTrailers.getJSONObject(i);
             String key = jsonCurrentTrailer.optString(JSON_TRAILERKEY_KEY);
             String name = jsonCurrentTrailer.optString(JSON_TRAILERNAME_KEY);
-            Trailer currentTrailer=new Trailer(key,name);
+            Trailer currentTrailer = new Trailer(key, name);
             trailerList.add(currentTrailer);
         }
-
         return trailerList;
+    }
+
+    public static ArrayList<Review> parseReviewJsonResults(String jsonResults) throws JSONException {
+        final String JSON_RESULTS_KEY = "results";
+        final String JSON_REVIEWAUTHOR_KEY = "author";
+        final String JSON_REVIEWCONTENT_KEY = "content";
+        final String JSON_REVIEWURL_KEY = "url";
+
+        ArrayList<Review> reviewList = new ArrayList<>();
+
+        JSONObject jsonObject = new JSONObject(jsonResults);
+        JSONArray jsonReviews = jsonObject.optJSONArray(JSON_RESULTS_KEY);
+        for (int i = 0; i < jsonReviews.length(); i++) {
+            JSONObject jsonCurrentReview = jsonReviews.getJSONObject(i);
+            String author = jsonCurrentReview.optString(JSON_REVIEWAUTHOR_KEY);
+            String content = jsonCurrentReview.optString(JSON_REVIEWCONTENT_KEY);
+            String url = jsonCurrentReview.optString(JSON_REVIEWURL_KEY);
+
+            Review currentReview = new Review(author, content, url);
+            reviewList.add(currentReview);
+        }
+        return reviewList;
     }
 }

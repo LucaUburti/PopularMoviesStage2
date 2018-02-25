@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +28,7 @@ public class DetailActivity extends AppCompatActivity {
     Context context = this;
 
     TrailerAdapter trailerAdapter;
-    //  ReviewAdapter reviewAdapter = new ReviewAdapter(this);
+    ReviewAdapter reviewAdapter;
     @BindView(R.id.title_tv)
     TextView titleTv;
     @BindView(R.id.description_tv)
@@ -56,7 +57,10 @@ public class DetailActivity extends AppCompatActivity {
                 Toast.makeText(context, R.string.returned_data_is_null, Toast.LENGTH_SHORT).show();
             } else {
                 trailerAdapter.add(data);
+                Log.d("Trailers", "number of trailers found:" + data.size());
+
                 trailerRv.setAdapter(trailerAdapter);
+
             }
         }
 
@@ -69,11 +73,18 @@ public class DetailActivity extends AppCompatActivity {
     private LoaderManager.LoaderCallbacks<ArrayList<Review>> reviewLoader = new LoaderManager.LoaderCallbacks<ArrayList<Review>>() {
         @Override
         public Loader<ArrayList<Review>> onCreateLoader(int id, Bundle args) {
-            return null;
+            return new ReviewAsyncTaskLoader(context, movie.getMovieId());
         }
 
         @Override
         public void onLoadFinished(Loader<ArrayList<Review>> loader, ArrayList<Review> data) {
+            if (data == null) {
+                Toast.makeText(context, R.string.returned_data_is_null, Toast.LENGTH_SHORT).show();
+            } else {
+                reviewAdapter.add(data);
+                Log.d("Reviews", "number of reviews found:" + data.size());
+                reviewRv.setAdapter(reviewAdapter);
+            }
 
 
         }
@@ -101,8 +112,9 @@ public class DetailActivity extends AppCompatActivity {
         trailerRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         trailerAdapter = new TrailerAdapter(this);
 
-        //reviewRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        //ReviewAdapter reviewAdapter = new ReviewAdapter(this);
+        reviewRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        reviewAdapter = new ReviewAdapter(this);
+
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -118,6 +130,7 @@ public class DetailActivity extends AppCompatActivity {
                 String formattedDate = movie.getReleaseDate().replace("-", "/");
                 releaseDate.setText(formattedDate);
 
+                posterIv.setContentDescription(movie.getTitle());
                 Picasso.with(this)
                         .load(movie.getPoster())
                         .placeholder(R.drawable.loading_popcorn)
@@ -125,7 +138,7 @@ public class DetailActivity extends AppCompatActivity {
                         .into(posterIv);
 
                 getSupportLoaderManager().initLoader(TRAILERLOADER_ID, null, trailerLoader);
-                //getSupportLoaderManager().initLoader(REVIEWLOADER_ID, null, reviewLoader);
+                getSupportLoaderManager().initLoader(REVIEWLOADER_ID, null, reviewLoader);
 
             } else {
                 Toast.makeText(this, R.string.error_movie_details, Toast.LENGTH_SHORT).show();
@@ -136,39 +149,4 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-    class Review {
-        String author;
-        String content;
-        String url;
-
-        Review(String author, String content, String url) {
-            this.author = author;
-            this.content = content;
-            this.url = url;
-        }
-
-        String getAuthor() {
-            return author;
-        }
-
-        void setAuthor(String author) {
-            this.author = author;
-        }
-
-        String getContent() {
-            return content;
-        }
-
-        void setContent(String content) {
-            this.content = content;
-        }
-
-        String getUrl() {
-            return url;
-        }
-
-        void setUrl(String url) {
-            this.url = url;
-        }
-    }
 }

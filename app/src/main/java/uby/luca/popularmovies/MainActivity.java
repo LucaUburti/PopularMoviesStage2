@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 
 import static uby.luca.popularmovies.MovieAdapter.PARCELED_MOVIE;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Movie>>, MovieAdapter.MovieOnClickHandler{
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Movie>>, MovieAdapter.MovieOnClickHandler {
 
     @BindView(R.id.main_rv)
     RecyclerView mainRv;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // from Stack Overflow:
         //https://stackoverflow.com/questions/3663665/how-can-i-get-the-current-screen-orientation
         int orientation = this.getResources().getConfiguration().orientation;
-        if (orientation== Configuration.ORIENTATION_PORTRAIT){
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             layoutManager = new GridLayoutManager(this, 2);
         } else {
             layoutManager = new GridLayoutManager(this, 4);
@@ -129,8 +129,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void movieOnClickImplementation(Movie clickedMovie) {
         Intent intent = new Intent(this, DetailActivity.class);
-        Bundle bundle =new Bundle();
-        bundle.putParcelable(PARCELED_MOVIE,clickedMovie);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(PARCELED_MOVIE, clickedMovie);
         intent.putExtras(bundle);
 
         startActivity(intent);

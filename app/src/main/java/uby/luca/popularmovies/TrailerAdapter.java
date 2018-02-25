@@ -45,6 +45,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<uby.luca.popularmovies.
     public void onBindViewHolder(TrailerHolder holder, int position) {
         Trailer currentTrailer = trailerList.get(position);
         holder.trailerNameTv.setText(currentTrailer.getName());
+        holder.trailerThumbnailIv.setContentDescription(currentTrailer.getName());
 
         String trailerThumbnailUrl = "http://img.youtube.com/vi/" + currentTrailer.getKey() + "/0.jpg";
         Picasso.with(mContext)
@@ -74,7 +75,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<uby.luca.popularmovies.
         public void onClick(View v) {
             String key = trailerList.get(getAdapterPosition()).getKey();
             String trailerYoutubeUrl = "http://www.youtube.com/watch?v=" + key;
-            Log.d(TAG, "onClick: "+trailerYoutubeUrl);
+            Log.d(TAG, "onClick: " + trailerYoutubeUrl);
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerYoutubeUrl));
             if (i.resolveActivity(mContext.getPackageManager()) != null) {
                 mContext.startActivity(i);
@@ -84,7 +85,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<uby.luca.popularmovies.
 
         }
     }
-
 
 
 }

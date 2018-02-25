@@ -8,7 +8,7 @@ import android.os.Parcelable;
  */
 
 
-public class Movie implements Parcelable{
+public class Movie implements Parcelable {
 
     private String movieId;
     private String title;
@@ -19,22 +19,22 @@ public class Movie implements Parcelable{
 
 
     public Movie(String movieId, String title, String poster, String voteAverage, String plot, String releaseDate) {
-        this.movieId=movieId;
+        this.movieId = movieId;
         this.title = title;
         this.poster = poster;
         this.voteAverage = voteAverage;
         this.plot = plot;
-        this.releaseDate=releaseDate;
+        this.releaseDate = releaseDate;
     }
 
 
     private Movie(Parcel in) {
-        movieId=in.readString();
+        movieId = in.readString();
         title = in.readString();
         poster = in.readString();
         voteAverage = in.readString();
         plot = in.readString();
-        releaseDate=in.readString();
+        releaseDate = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
