@@ -10,6 +10,7 @@ import android.os.Parcelable;
 
 public class Movie implements Parcelable{
 
+    private String movieId;
     private String title;
     private String poster;
     private String voteAverage;
@@ -17,7 +18,8 @@ public class Movie implements Parcelable{
     private String releaseDate;
 
 
-    public Movie(String title, String poster, String voteAverage, String plot, String releaseDate) {
+    public Movie(String movieId, String title, String poster, String voteAverage, String plot, String releaseDate) {
+        this.movieId=movieId;
         this.title = title;
         this.poster = poster;
         this.voteAverage = voteAverage;
@@ -27,6 +29,7 @@ public class Movie implements Parcelable{
 
 
     private Movie(Parcel in) {
+        movieId=in.readString();
         title = in.readString();
         poster = in.readString();
         voteAverage = in.readString();
@@ -45,6 +48,14 @@ public class Movie implements Parcelable{
             return new Movie[size];
         }
     };
+
+    public String getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
+    }
 
     public String getTitle() {
         return title;
@@ -93,6 +104,7 @@ public class Movie implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(movieId);
         dest.writeString(title);
         dest.writeString(poster);
         dest.writeString(voteAverage);

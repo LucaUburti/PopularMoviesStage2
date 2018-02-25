@@ -14,10 +14,12 @@
         android:contentDescription="@string/blank_description"
         tools:src="@drawable/sampleposter"
         android:adjustViewBounds="true"
+        android:layout_gravity="center"
         />
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/trailer_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Trailer name here"/>
+        tools:text="Trailer name here"
+        android:layout_gravity="center"/>
 </LinearLayout>

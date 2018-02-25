@@ -1,9 +1,8 @@
 package uby.luca.popularmovies;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,41 +24,40 @@ public class DetailActivity extends AppCompatActivity {
     Movie movie;
     private final int TRAILERLOADER_ID = 31;
     private final int REVIEWLOADER_ID = 32;
+    Context context = this;
 
     TrailerAdapter trailerAdapter;
-//  ReviewAdapter reviewAdapter = new ReviewAdapter(this);
+    //  ReviewAdapter reviewAdapter = new ReviewAdapter(this);
+    @BindView(R.id.title_tv)
+    TextView titleTv;
+    @BindView(R.id.description_tv)
+    TextView descriptionTv;
+    @BindView(R.id.poster_iv)
+    ImageView posterIv;
+    @BindView(R.id.average_vote_tv)
+    TextView averageVoteTv;
+    @BindView(R.id.release_date_tv)
+    TextView releaseDate;
+    @BindView(R.id.trailer_rv)
+    RecyclerView trailerRv;
+    @BindView(R.id.review_rv)
+    RecyclerView reviewRv;
 
     //https://stackoverflow.com/questions/15643907/multiple-loaders-in-same-activity
     private LoaderManager.LoaderCallbacks<ArrayList<Trailer>> trailerLoader = new LoaderManager.LoaderCallbacks<ArrayList<Trailer>>() {
         @Override
-        public  Loader<ArrayList<Trailer>> onCreateLoader(int id, Bundle args) {
-            return new AsyncTaskLoader<ArrayList<Trailer>>(getApplicationContext()) {
-                @Nullable
-                @Override
-                public ArrayList<Trailer> loadInBackground() {
-                    return null;
-                }
-
-                @Override
-                protected void onStartLoading() {
-                    forceLoad();
-                }
-            };
+        public Loader<ArrayList<Trailer>> onCreateLoader(int id, Bundle args) {
+            return new TrailerAsyncTaskLoader(context, movie.getMovieId());
         }
 
         @Override
         public void onLoadFinished(Loader<ArrayList<Trailer>> loader, ArrayList<Trailer> data) {
-            ArrayList<Trailer> fakeResults=new ArrayList<>();
-            fakeResults.add(new Trailer("3b946aGm0zs","Official Trailer 1"));
-            fakeResults.add(new Trailer("64-iSYVmMVY","Official Trailer 2"));
-            fakeResults.add(new Trailer("3b946aGm0zs","Official Trailer 3"));
-            fakeResults.add(new Trailer("64-iSYVmMVY","Official Trailer 4"));
-            fakeResults.add(new Trailer("3b946aGm0zs","Official Trailer 5"));
-            fakeResults.add(new Trailer("64-iSYVmMVY","Official Trailer 6"));
-            trailerAdapter.add(fakeResults);
-            trailerRv.setAdapter(trailerAdapter);
-
-
+            if (data == null) {
+                Toast.makeText(context, R.string.returned_data_is_null, Toast.LENGTH_SHORT).show();
+            } else {
+                trailerAdapter.add(data);
+                trailerRv.setAdapter(trailerAdapter);
+            }
         }
 
         @Override
@@ -85,23 +83,6 @@ public class DetailActivity extends AppCompatActivity {
 
         }
     };
-
-
-    @BindView(R.id.title_tv)
-    TextView titleTv;
-    @BindView(R.id.description_tv)
-    TextView descriptionTv;
-    @BindView(R.id.poster_iv)
-    ImageView posterIv;
-    @BindView(R.id.average_vote_tv)
-    TextView averageVoteTv;
-    @BindView(R.id.release_date_tv)
-    TextView releaseDate;
-    @BindView(R.id.trailer_rv)
-    RecyclerView trailerRv;
-    @BindView(R.id.review_rv)
-    RecyclerView reviewRv;
-
 
 
     @Override
@@ -154,31 +135,6 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    class Trailer {
-        String key;
-        String name;
-
-        Trailer(String key, String name) {
-            this.key = key;
-            this.name = name;
-        }
-
-        String getKey() {
-            return key;
-        }
-
-        void setKey(String key) {
-            this.key = key;
-        }
-
-        String getName() {
-            return name;
-        }
-
-        void setName(String name) {
-            this.name = name;
-        }
-    }
 
     class Review {
         String author;
