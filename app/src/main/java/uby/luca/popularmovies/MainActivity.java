@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import uby.luca.popularmovies.adapters.FavoriteMovieAdapter;
 import uby.luca.popularmovies.adapters.MovieAdapter;
+import uby.luca.popularmovies.data.MovieContract;
 import uby.luca.popularmovies.loaders.MovieAsyncTaskLoader;
 import uby.luca.popularmovies.POJOs.Movie;
 
@@ -46,8 +48,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return null;
-            //return new CursorLoader(mContext, Uri.parse("testURI"), null, null, null, null);
+          return new CursorLoader(mContext, MovieContract.MovieEntry.CONTENT_URI, null, null, null, null);
         }
 
         @Override

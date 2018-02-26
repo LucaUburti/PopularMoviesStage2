@@ -32,6 +32,10 @@
                 android:value=".MainActivity" />
         </activity>
 
+        <provider
+            android:name="uby.luca.popularmovies.data.MovieProvider"
+            android:authorities="uby.luca.popularmovies"
+            android:exported="false" />
     </application>
 
 </manifest>

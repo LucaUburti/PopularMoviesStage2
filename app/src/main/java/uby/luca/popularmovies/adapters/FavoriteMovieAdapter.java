@@ -12,6 +12,7 @@ import com.squareup.picasso.Picasso;
 
 import uby.luca.popularmovies.POJOs.Movie;
 import uby.luca.popularmovies.R;
+import uby.luca.popularmovies.data.MovieContract;
 
 
 /**
@@ -49,8 +50,9 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
 
     @Override
     public void onBindViewHolder(MovieHolder holder, int position) {
-        String title = movieCursor.getString(movieCursor.getColumnIndex("title")); //TODO replace this string
-        String poster = movieCursor.getString(movieCursor.getColumnIndex("poster")); //TODO replace this string
+        movieCursor.moveToPosition(position);
+        String title = movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
+        String poster = movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER));
 
 
         holder.movieIv.setContentDescription(title);
@@ -77,9 +79,16 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
 
         @Override
         public void onClick(View v) {
-            String movieId= movieCursor.getString(movieCursor.getColumnIndex("movieId")); //TODO replace this string
-            //... repeat for "movieId","title","poster","voteAverage","plot","releaseDate"
-            Movie clickedMovie=new Movie("movieId","title","poster","voteAverage","plot","releaseDate");
+            movieCursor.moveToPosition(getAdapterPosition());
+
+            String movieId= movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIEID));
+            String title= movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
+            String poster= movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER));
+            String voteAverage= movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTEAVERAGE));
+            String plot= movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_PLOT));
+            String releaseDate= movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASEDATE));
+
+            Movie clickedMovie=new Movie(movieId,title,poster,voteAverage,plot,releaseDate);
 
             movieOnClickHandler.movieOnClickImplementation(clickedMovie);
         }

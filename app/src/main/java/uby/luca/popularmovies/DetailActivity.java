@@ -1,7 +1,10 @@
 package uby.luca.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
@@ -27,6 +30,7 @@ import uby.luca.popularmovies.POJOs.Trailer;
 import uby.luca.popularmovies.adapters.MovieAdapter;
 import uby.luca.popularmovies.adapters.ReviewAdapter;
 import uby.luca.popularmovies.adapters.TrailerAdapter;
+import uby.luca.popularmovies.data.MovieContract;
 import uby.luca.popularmovies.loaders.ReviewAsyncTaskLoader;
 import uby.luca.popularmovies.loaders.TrailerAsyncTaskLoader;
 
@@ -141,17 +145,27 @@ public class DetailActivity extends AppCompatActivity {
                 } else {
                     favIv.setImageResource(android.R.drawable.btn_star_big_off);
                 }
+
+
                 favIv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (isFavorite()) {
+                        if (isFavorite()) {  //already a favourite: call CP to delete movie from db
                             favIv.setImageResource(android.R.drawable.btn_star_big_off);
                             Toast.makeText(context, R.string.removed_from_favorites, Toast.LENGTH_SHORT).show();
                             //TODO delete from favorites
-                        } else {
+                        } else { //new favourite: call CP to insert movie into db
+                            ContentValues cv=new ContentValues();
+                            cv.put(MovieContract.MovieEntry.COLUMN_MOVIEID,movie.getMovieId());
+                            cv.put(MovieContract.MovieEntry.COLUMN_PLOT,movie.getPlot());
+                            cv.put(MovieContract.MovieEntry.COLUMN_POSTER,movie.getPoster());
+                            cv.put(MovieContract.MovieEntry.COLUMN_RELEASEDATE,movie.getReleaseDate());
+                            cv.put(MovieContract.MovieEntry.COLUMN_TITLE,movie.getTitle());
+                            cv.put(MovieContract.MovieEntry.COLUMN_VOTEAVERAGE,movie.getVoteAverage());
+                            getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cv);
+                            Log.d("CV", "onClick: " + cv.toString());
                             favIv.setImageResource(android.R.drawable.btn_star_big_on);
                             Toast.makeText(context, R.string.added_to_favorites, Toast.LENGTH_SHORT).show();
-                            //TODO add to favorites
                         }
                     }
                 });
@@ -173,9 +187,24 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isFavorite() {
-        return false;
-        //TODO call contentprovider and see if this movie is in  the list of favorites
+    private boolean isFavorite() { //checks if movieId is already present locally
+        String stringUri=MovieContract.MovieEntry.CONTENT_URI.toString()+"/"+movie.getMovieId();
+        Log.d("isFavorite", " checking movie with ID: "+movie.getMovieId());
+        Cursor queryResult=getContentResolver().query(Uri.parse(stringUri),null,null,null,null);
+        if (queryResult == null) {
+            Log.d("isFavorite", " null results... not present?");
+            return false;
+        }
+
+        if (queryResult.getCount()>0){
+            Log.d("isFavorite", " movie already present: "+queryResult.getCount()+" times!");
+            queryResult.close();
+            return true;
+        } else {
+            Log.d("isFavorite", " movie not present.");
+            queryResult.close();
+            return false;
+        }
 
     }
 
