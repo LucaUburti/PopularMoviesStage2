@@ -164,7 +164,7 @@ public class DetailActivity extends AppCompatActivity {
                             cv.put(MovieContract.MovieEntry.COLUMN_RELEASEDATE, movie.getReleaseDate());
                             cv.put(MovieContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
                             cv.put(MovieContract.MovieEntry.COLUMN_VOTEAVERAGE, movie.getVoteAverage());
-                            Log.d("DetailActivity", "onClick: " + cv.toString());
+                            Log.d("DetailActivity", "onClick: inserting ContentValues:" + cv.toString());
 
                             getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cv);
 
@@ -196,7 +196,7 @@ public class DetailActivity extends AppCompatActivity {
         Log.d("DetailActivity", "isFavorite: checking movie with ID: " + movie.getMovieId());
         Cursor queryResult = getContentResolver().query(Uri.parse(stringUri), null, null, null, null);
         if (queryResult == null) {
-            Log.d("DetailActivity", "isFavorite: null results... not present?");
+            Log.e("DetailActivity", "isFavorite: null results... not present?");
             return false;
         }
 

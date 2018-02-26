@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -35,9 +36,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     RecyclerView mainRv;
     public static final int HIGHEST_RATED = 1;
     public static final int MOST_POPULAR = 2;
-
+    public static final int FAVORITES = 3;
     private int sortOrder = MOST_POPULAR;//default sort order
+    private static final String SORT_KEY ="sortOrder";
+
     private final int LOADER_ID = 37;
+    private final int FAVORITE_LOADER_ID = 38;
+
 
     private MovieAdapter mAdapter;
     private FavoriteMovieAdapter mFavoriteAdapter;
@@ -74,6 +79,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        if (savedInstanceState!=null){
+            if (savedInstanceState.containsKey(SORT_KEY)){
+                sortOrder=(savedInstanceState.getInt(SORT_KEY)); //on rotation remember the last sorting criteria we used
+            }
+        }
+
+
         GridLayoutManager layoutManager;
 
         // from Stack Overflow:
@@ -92,7 +104,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (!isOnline()) {
             Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show();
         } else {
-            getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+            if (sortOrder == HIGHEST_RATED|| sortOrder== MOST_POPULAR) {    //check to see which loader we need to use, needed to avoid jumping to another sorting criteria after rotations
+                Log.d("MainActivity","initLoader default");
+                getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+            } else {
+                Log.d("MainActivity","initLoader favorites");
+                getSupportLoaderManager().initLoader(FAVORITE_LOADER_ID, null, favoritesLoader);
+            }
         }
     }
 
@@ -103,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -111,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 if (!isOnline()) {
                     Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show();
                 } else {
+                    Log.d("MainActivity","restartLoader default");
                     getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
                 }
                 return true;
@@ -119,11 +139,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 if (!isOnline()) {
                     Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show();
                 } else {
+                    Log.d("MainActivity","restartLoader default");
                     getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
                 }
                 return true;
             case R.id.favorites:
-                getSupportLoaderManager().restartLoader(LOADER_ID, null, favoritesLoader);
+                sortOrder = FAVORITES;
+                Log.d("MainActivity","restartLoader favorite");
+                getSupportLoaderManager().restartLoader(FAVORITE_LOADER_ID, null, favoritesLoader);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -162,6 +185,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SORT_KEY,sortOrder);
+    }
+
+
+    @Override
     public void movieOnClickImplementation(Movie clickedMovie) {
         Intent intent = new Intent(this, DetailActivity.class);
         Bundle bundle = new Bundle();
@@ -169,6 +199,5 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         intent.putExtras(bundle);
 
         startActivity(intent);
-
     }
 }
