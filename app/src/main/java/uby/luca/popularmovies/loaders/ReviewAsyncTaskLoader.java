@@ -21,7 +21,7 @@ import uby.luca.popularmovies.utils.NetworkUtils;
 
 public class ReviewAsyncTaskLoader extends AsyncTaskLoader<ArrayList<Review>> {
 
-    String movieId;
+    private String movieId;
 
     public ReviewAsyncTaskLoader(@NonNull Context context, String movieId) {
         super(context);

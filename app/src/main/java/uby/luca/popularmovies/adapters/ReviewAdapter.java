@@ -61,19 +61,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHold
             reviewUrlTv = reviewView.findViewById(R.id.review_url_tv);
         }
 
-//        @Override
-//        public void onClick(View v) {
-//            String key = reviewList.get(getAdapterPosition()).getKey();
-//            String reviewYoutubeUrl = "http://www.youtube.com/watch?v=" + key;
-//            Log.d(TAG, "onClick: "+reviewYoutubeUrl);
-//            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(reviewYoutubeUrl));
-//            if (i.resolveActivity(mContext.getPackageManager()) != null) {
-//                mContext.startActivity(i);
-//            } else {
-//                Toast.makeText(mContext, R.string.no_apps_to_open_resource, Toast.LENGTH_SHORT).show();
-//            }
-//
-//        }
     }
 
 }

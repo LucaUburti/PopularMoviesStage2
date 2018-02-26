@@ -5,13 +5,11 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import static uby.luca.popularmovies.data.MovieContract.MovieEntry.TABLE_NAME;
 
@@ -22,11 +20,11 @@ import static uby.luca.popularmovies.data.MovieContract.MovieEntry.TABLE_NAME;
 public class MovieProvider extends ContentProvider {
     private MovieDbHelper movieDbHelper;
 
-    public static final int CODE_MOVIES = 100;
-    public static final int CODE_MOVIE_WITH_ID = 101;
-    public static final UriMatcher uriMatcher = buildUriMatcher();
+    private static final int CODE_MOVIES = 100;
+    private static final int CODE_MOVIE_WITH_ID = 101;
+    private static final UriMatcher uriMatcher = buildUriMatcher();
 
-    public static UriMatcher buildUriMatcher() {
+    private static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(MovieContract.AUTHORITY, MovieContract.PATH_MOVIES, CODE_MOVIES);
         matcher.addURI(MovieContract.AUTHORITY, MovieContract.PATH_MOVIES + "/#", CODE_MOVIE_WITH_ID);
@@ -47,35 +45,21 @@ public class MovieProvider extends ContentProvider {
         Cursor movieCursor;
         switch (uriMatcher.match(uri)) {
             case CODE_MOVIES:
-                Log.d("CP", "Full DB query");
+                Log.d("MovieProvider", "Full DB query"+uri.toString());
                 movieCursor = movieDb.query(TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
-
-                movieCursor.moveToFirst();
-                while (!movieCursor.isAfterLast()) {
-                    Log.d("CP", "query: " + DatabaseUtils.dumpCurrentRowToString(movieCursor));
-                    movieCursor.moveToNext();
-                }
                 break;
+
             case CODE_MOVIE_WITH_ID:
-
                 long rowId = ContentUris.parseId(uri);
-                Log.d("CP", "single query: "+uri.toString());
+                Log.d("MovieProvider", "single query: "+uri.toString());
                 movieCursor=movieDb.query(TABLE_NAME, null, MovieContract.MovieEntry.COLUMN_MOVIEID+" = ?", new String[]{Long.toString(rowId)},null,null,null);
-
-
                 break;
 
             default:
                 throw new UnsupportedOperationException("Not yet implemented");
         }
-        Log.d("CP", "end of query: ");
         if (movieCursor != null) {
-            Log.d("CP", "Cursor isn't null, returning data!");
-            movieCursor.moveToFirst();
-            while (!movieCursor.isAfterLast())  {
-                Log.d("CP", "Cursor data: "+DatabaseUtils.dumpCurrentRowToString(movieCursor));
-                movieCursor.moveToNext();
-            }
+            Log.d("MovieProvider", "Rows returned from query: "+movieCursor.getCount());
             movieCursor.setNotificationUri(getContext().getContentResolver(), uri);
         }
         return movieCursor;
@@ -97,8 +81,7 @@ public class MovieProvider extends ContentProvider {
                 long id = movieDb.insert(TABLE_NAME, null, values);
                 if (id > 0) {
                     returnUri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, id);
-                    Log.d("CP", "insert: " + values.toString());
-                    Log.d("CP", "insertion URI: " + returnUri.toString());
+                    Log.d("MovieProvider", "inserted URI: " + returnUri.toString());
                 } else {
                     throw new android.database.SQLException("Failed to insert data " + uri);
                 }
@@ -117,8 +100,10 @@ public class MovieProvider extends ContentProvider {
         if (uriMatcher.match(uri) != CODE_MOVIE_WITH_ID) {
             throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        long rowId = ContentUris.parseId(uri);
-        int affectedRows = movieDb.delete(TABLE_NAME, "_id=?", new String[]{Float.toString(rowId)});
+        Log.d("MovieProvider", "delete uri: " + uri.toString());
+        long rowId = ContentUris.parseId(uri); //here the rowId is actually the movieId
+        int affectedRows = movieDb.delete(TABLE_NAME, MovieContract.MovieEntry.COLUMN_MOVIEID+" = ?", new String[]{Long.toString(rowId)});
+        Log.d("MovieProvider", "Rows deleted: " + Integer.toString(affectedRows));
         getContext().getContentResolver().notifyChange(uri, null);
         return affectedRows;
 
@@ -129,5 +114,5 @@ public class MovieProvider extends ContentProvider {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    //TODO some Log.d cleanup...
+
 }

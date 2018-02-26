@@ -23,7 +23,6 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
 
     private Cursor movieCursor;
     private Context mContext;
-    static final String PARCELED_MOVIE = "parceledMovie";
 
     private final MovieOnClickHandler movieOnClickHandler;
 
@@ -54,7 +53,6 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
         String title = movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
         String poster = movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER));
 
-
         holder.movieIv.setContentDescription(title);
         Picasso.with(mContext)
                 .load(poster)
@@ -81,14 +79,14 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
         public void onClick(View v) {
             movieCursor.moveToPosition(getAdapterPosition());
 
-            String movieId= movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIEID));
-            String title= movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
-            String poster= movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER));
-            String voteAverage= movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTEAVERAGE));
-            String plot= movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_PLOT));
-            String releaseDate= movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASEDATE));
+            String movieId = movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIEID));
+            String title = movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
+            String poster = movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER));
+            String voteAverage = movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTEAVERAGE));
+            String plot = movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_PLOT));
+            String releaseDate = movieCursor.getString(movieCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASEDATE));
 
-            Movie clickedMovie=new Movie(movieId,title,poster,voteAverage,plot,releaseDate);
+            Movie clickedMovie = new Movie(movieId, title, poster, voteAverage, plot, releaseDate);
 
             movieOnClickHandler.movieOnClickImplementation(clickedMovie);
         }

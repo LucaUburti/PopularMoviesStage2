@@ -13,4 +13,5 @@
     <string name="no_apps_to_open_resource">no Apps to open this resource</string>
     <string name="removed_from_favorites">Movie removed from favorites</string>
     <string name="added_to_favorites">Movie added to favorites</string>
+    <string name="no_favorites_yet">No favorite movies found</string>
 </resources>

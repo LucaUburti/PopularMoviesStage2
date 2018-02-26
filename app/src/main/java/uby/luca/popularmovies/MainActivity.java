@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -36,9 +35,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     RecyclerView mainRv;
     public static final int HIGHEST_RATED = 1;
     public static final int MOST_POPULAR = 2;
-    public static final int FAVORITES = 3;
-    public int sortOrder = MOST_POPULAR;//default sort order
-    public  final int LOADER_ID = 37;
+
+    private int sortOrder = MOST_POPULAR;//default sort order
+    private final int LOADER_ID = 37;
 
     private MovieAdapter mAdapter;
     private FavoriteMovieAdapter mFavoriteAdapter;
@@ -48,17 +47,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-          return new CursorLoader(mContext, MovieContract.MovieEntry.CONTENT_URI, null, null, null, null);
+            return new CursorLoader(mContext, MovieContract.MovieEntry.CONTENT_URI, null, null, null, null);
         }
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            Log.d("Loader", "onLoadFinished");
             if (data == null) {
                 Toast.makeText(mContext, R.string.returned_cursor_is_null, Toast.LENGTH_SHORT).show();
             } else {
                 mFavoriteAdapter.add(data);
                 mainRv.setAdapter(mFavoriteAdapter);
+                if (data.getCount() == 0) {
+                    Toast.makeText(mContext, R.string.no_favorites_yet, Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
@@ -84,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             layoutManager = new GridLayoutManager(this, 4);
         }
 
-
         mainRv.setLayoutManager(layoutManager);
         mAdapter = new MovieAdapter(this, this);
         mFavoriteAdapter = new FavoriteMovieAdapter(this, this);
@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         } else {
             getSupportLoaderManager().initLoader(LOADER_ID, null, this);
         }
-
     }
 
 
@@ -124,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
                 return true;
             case R.id.favorites:
-                sortOrder = FAVORITES;
                 getSupportLoaderManager().restartLoader(LOADER_ID, null, favoritesLoader);
                 return true;
             default:
@@ -149,8 +147,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
-
-
     }
 
     // from Stack Overflow:

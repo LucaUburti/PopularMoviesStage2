@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import uby.luca.popularmovies.POJOs.Trailer;
 import uby.luca.popularmovies.R;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by uburti on 25/02/2018.
  */
@@ -78,7 +76,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerH
         public void onClick(View v) {
             String key = trailerList.get(getAdapterPosition()).getKey();
             String trailerYoutubeUrl = "http://www.youtube.com/watch?v=" + key;
-            Log.d(TAG, "onClick: " + trailerYoutubeUrl);
+            Log.d("TrailerAdapter", "onClick: " + trailerYoutubeUrl);
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerYoutubeUrl));
             if (i.resolveActivity(mContext.getPackageManager()) != null) {
                 mContext.startActivity(i);

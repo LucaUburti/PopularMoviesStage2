@@ -21,8 +21,6 @@ import uby.luca.popularmovies.POJOs.Movie;
 import uby.luca.popularmovies.POJOs.Review;
 import uby.luca.popularmovies.POJOs.Trailer;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by uburti on 19/02/2018.
  */
@@ -74,7 +72,7 @@ public class NetworkUtils {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, "buildTrailerURL: " + url.toString());
+        Log.d("NetworkUtils", "buildTrailerURL: " + url.toString());
         return url;
     }
 
@@ -93,7 +91,7 @@ public class NetworkUtils {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, "buildReviewURL: " + url.toString());
+        Log.d("NetworkUtils", "buildReviewURL: " + url.toString());
         return url;
     }
 

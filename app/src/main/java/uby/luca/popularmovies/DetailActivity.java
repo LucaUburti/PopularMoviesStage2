@@ -35,13 +35,13 @@ import uby.luca.popularmovies.loaders.ReviewAsyncTaskLoader;
 import uby.luca.popularmovies.loaders.TrailerAsyncTaskLoader;
 
 public class DetailActivity extends AppCompatActivity {
-    Movie movie;
+    private Movie movie;
     private final int TRAILERLOADER_ID = 31;
     private final int REVIEWLOADER_ID = 32;
-    Context context = this;
+    private Context context = this;
 
-    TrailerAdapter trailerAdapter;
-    ReviewAdapter reviewAdapter;
+    private TrailerAdapter trailerAdapter;
+    private ReviewAdapter reviewAdapter;
     @BindView(R.id.title_tv)
     TextView titleTv;
     @BindView(R.id.description_tv)
@@ -72,7 +72,7 @@ public class DetailActivity extends AppCompatActivity {
                 Toast.makeText(context, R.string.returned_data_is_null, Toast.LENGTH_SHORT).show();
             } else {
                 trailerAdapter.add(data);
-                Log.d("Trailers", "number of trailers found:" + data.size());
+                Log.d("DetailActivity", "number of trailers found:" + data.size());
 
                 trailerRv.setAdapter(trailerAdapter);
 
@@ -96,7 +96,7 @@ public class DetailActivity extends AppCompatActivity {
                 Toast.makeText(context, R.string.returned_data_is_null, Toast.LENGTH_SHORT).show();
             } else {
                 reviewAdapter.add(data);
-                Log.d("Reviews", "number of reviews found:" + data.size());
+                Log.d("DetailActivity", "number of reviews found:" + data.size());
                 reviewRv.setAdapter(reviewAdapter);
             }
         }
@@ -151,19 +151,23 @@ public class DetailActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (isFavorite()) {  //already a favourite: call CP to delete movie from db
+                            String stringUri = MovieContract.MovieEntry.CONTENT_URI.toString() + "/" + movie.getMovieId();
+                            getContentResolver().delete(Uri.parse(stringUri), null, null);
+
                             favIv.setImageResource(android.R.drawable.btn_star_big_off);
                             Toast.makeText(context, R.string.removed_from_favorites, Toast.LENGTH_SHORT).show();
-                            //TODO delete from favorites
                         } else { //new favourite: call CP to insert movie into db
-                            ContentValues cv=new ContentValues();
-                            cv.put(MovieContract.MovieEntry.COLUMN_MOVIEID,movie.getMovieId());
-                            cv.put(MovieContract.MovieEntry.COLUMN_PLOT,movie.getPlot());
-                            cv.put(MovieContract.MovieEntry.COLUMN_POSTER,movie.getPoster());
-                            cv.put(MovieContract.MovieEntry.COLUMN_RELEASEDATE,movie.getReleaseDate());
-                            cv.put(MovieContract.MovieEntry.COLUMN_TITLE,movie.getTitle());
-                            cv.put(MovieContract.MovieEntry.COLUMN_VOTEAVERAGE,movie.getVoteAverage());
+                            ContentValues cv = new ContentValues();
+                            cv.put(MovieContract.MovieEntry.COLUMN_MOVIEID, movie.getMovieId());
+                            cv.put(MovieContract.MovieEntry.COLUMN_PLOT, movie.getPlot());
+                            cv.put(MovieContract.MovieEntry.COLUMN_POSTER, movie.getPoster());
+                            cv.put(MovieContract.MovieEntry.COLUMN_RELEASEDATE, movie.getReleaseDate());
+                            cv.put(MovieContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
+                            cv.put(MovieContract.MovieEntry.COLUMN_VOTEAVERAGE, movie.getVoteAverage());
+                            Log.d("DetailActivity", "onClick: " + cv.toString());
+
                             getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cv);
-                            Log.d("CV", "onClick: " + cv.toString());
+
                             favIv.setImageResource(android.R.drawable.btn_star_big_on);
                             Toast.makeText(context, R.string.added_to_favorites, Toast.LENGTH_SHORT).show();
                         }
@@ -188,20 +192,20 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private boolean isFavorite() { //checks if movieId is already present locally
-        String stringUri=MovieContract.MovieEntry.CONTENT_URI.toString()+"/"+movie.getMovieId();
-        Log.d("isFavorite", " checking movie with ID: "+movie.getMovieId());
-        Cursor queryResult=getContentResolver().query(Uri.parse(stringUri),null,null,null,null);
+        String stringUri = MovieContract.MovieEntry.CONTENT_URI.toString() + "/" + movie.getMovieId();
+        Log.d("DetailActivity", "isFavorite: checking movie with ID: " + movie.getMovieId());
+        Cursor queryResult = getContentResolver().query(Uri.parse(stringUri), null, null, null, null);
         if (queryResult == null) {
-            Log.d("isFavorite", " null results... not present?");
+            Log.d("DetailActivity", "isFavorite: null results... not present?");
             return false;
         }
 
-        if (queryResult.getCount()>0){
-            Log.d("isFavorite", " movie already present: "+queryResult.getCount()+" times!");
+        if (queryResult.getCount() > 0) {
+            Log.d("DetailActivity", "isFavorite: movie already present: " + queryResult.getCount() + " times!");
             queryResult.close();
             return true;
         } else {
-            Log.d("isFavorite", " movie not present.");
+            Log.d("DetailActivity", "isFavorite: movie not present.");
             queryResult.close();
             return false;
         }

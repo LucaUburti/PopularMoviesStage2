@@ -5,9 +5,9 @@ package uby.luca.popularmovies.POJOs;
  */
 
 public class Review {
-    String author;
-    String content;
-    String url;
+    private String author;
+    private String content;
+    private String url;
 
     public Review(String author, String content, String url) {
         this.author = author;

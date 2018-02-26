@@ -5,15 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by uburti on 26/02/2018.
  */
 
-public class MovieDbHelper extends SQLiteOpenHelper {
-    static final String DATABASE_NAME = "movielist.db";
-    static final int DATABASE_VERSION = 1;
+class MovieDbHelper extends SQLiteOpenHelper {
+    private static final String DATABASE_NAME = "movielist.db";
+    private static final int DATABASE_VERSION = 1;
 
     public MovieDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -31,7 +29,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 MovieContract.MovieEntry.COLUMN_TITLE +             " TEXT NOT NULL, " +
                 MovieContract.MovieEntry.COLUMN_VOTEAVERAGE +       " TEXT" +
                 ");";
-        Log.d(TAG, "Table creation SQL string: "+SQL_CREATE_MOVIELIST_TABLE);
+        Log.d("MovieDbHelper", "Table creation SQL string: "+SQL_CREATE_MOVIELIST_TABLE);
         db.execSQL(SQL_CREATE_MOVIELIST_TABLE);
     }
 

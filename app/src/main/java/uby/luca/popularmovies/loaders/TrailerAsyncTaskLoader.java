@@ -21,7 +21,7 @@ import uby.luca.popularmovies.utils.NetworkUtils;
 
 public class TrailerAsyncTaskLoader extends AsyncTaskLoader<ArrayList<Trailer>> {
 
-    String movieId;
+    private String movieId;
 
     public TrailerAsyncTaskLoader(@NonNull Context context, String movieId) {
         super(context);
