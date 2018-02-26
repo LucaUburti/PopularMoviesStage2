@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     RecyclerView mainRv;
     static final int HIGHEST_RATED = 1;
     static final int MOST_POPULAR = 2;
+    static final int FAVORITES = 3;
     private int sortOrder = MOST_POPULAR;//default sort order
     private final int LOADER_ID = 37;
     private MovieAdapter mAdapter;
@@ -88,6 +89,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
                 }
                 return true;
+            case R.id.favorites:
+                sortOrder = FAVORITES;
+                getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -101,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
         if (data == null) {
-            Toast.makeText(getParent().getApplicationContext(), R.string.returned_data_is_null, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.returned_data_is_null, Toast.LENGTH_SHORT).show();
         } else {
             mAdapter.add(data);
             mainRv.setAdapter(mAdapter);

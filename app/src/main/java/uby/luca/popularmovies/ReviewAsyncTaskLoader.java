@@ -35,7 +35,9 @@ public class ReviewAsyncTaskLoader extends AsyncTaskLoader<ArrayList<Review>> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        if (jsonResults == null) {
+            return null;
+        }
         ArrayList<Review> reviewList = null;
         try {
             reviewList = NetworkUtils.parseReviewJsonResults(jsonResults);

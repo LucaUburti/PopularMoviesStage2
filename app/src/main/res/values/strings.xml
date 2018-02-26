@@ -7,7 +7,9 @@
     <string name="average_vote">Average vote</string>
     <string name="release_date">Release Date</string>
     <string name="not_connected">You are not connected to the Internet</string>
-    <string name="returned_data_is_null">returned data is null!</string>
+    <string name="returned_data_is_null">Error retrieving data. Check Internet connection</string>
     <string name="favorites">Favorites</string>
     <string name="no_apps_to_open_resource">no Apps to open this resource</string>
+    <string name="removed_from_favorites">Movie removed from favorites</string>
+    <string name="added_to_favorites">Movie added to favorites</string>
 </resources>

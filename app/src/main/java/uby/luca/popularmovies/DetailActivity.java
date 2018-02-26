@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,8 @@ public class DetailActivity extends AppCompatActivity {
     RecyclerView trailerRv;
     @BindView(R.id.review_rv)
     RecyclerView reviewRv;
+    @BindView(R.id.fav_iv)
+    ImageView favIv;
 
     //https://stackoverflow.com/questions/15643907/multiple-loaders-in-same-activity
     private LoaderManager.LoaderCallbacks<ArrayList<Trailer>> trailerLoader = new LoaderManager.LoaderCallbacks<ArrayList<Trailer>>() {
@@ -66,7 +69,6 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         public void onLoaderReset(Loader<ArrayList<Trailer>> loader) {
-
         }
     };
 
@@ -85,20 +87,16 @@ public class DetailActivity extends AppCompatActivity {
                 Log.d("Reviews", "number of reviews found:" + data.size());
                 reviewRv.setAdapter(reviewAdapter);
             }
-
-
         }
 
         @Override
         public void onLoaderReset(Loader<ArrayList<Review>> loader) {
-
         }
     };
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
@@ -107,13 +105,6 @@ public class DetailActivity extends AppCompatActivity {
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
         }
-
-
-        trailerRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        trailerAdapter = new TrailerAdapter(this);
-
-        reviewRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        reviewAdapter = new ReviewAdapter(this);
 
 
         Intent intent = getIntent();
@@ -137,6 +128,32 @@ public class DetailActivity extends AppCompatActivity {
                         .error(R.drawable.img_not_found)
                         .into(posterIv);
 
+                if (isFavorite()) {
+                    favIv.setImageResource(android.R.drawable.btn_star_big_on);
+                } else {
+                    favIv.setImageResource(android.R.drawable.btn_star_big_off);
+                }
+                favIv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (isFavorite()) {
+                            favIv.setImageResource(android.R.drawable.btn_star_big_off);
+                            Toast.makeText(context, R.string.removed_from_favorites, Toast.LENGTH_SHORT).show();
+                            //TODO delete from favorites
+                        } else {
+                            favIv.setImageResource(android.R.drawable.btn_star_big_on);
+                            Toast.makeText(context, R.string.added_to_favorites, Toast.LENGTH_SHORT).show();
+                            //TODO add to favorites
+                        }
+                    }
+                });
+
+                trailerRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                trailerAdapter = new TrailerAdapter(this);
+
+                reviewRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+                reviewAdapter = new ReviewAdapter(this);
+
                 getSupportLoaderManager().initLoader(TRAILERLOADER_ID, null, trailerLoader);
                 getSupportLoaderManager().initLoader(REVIEWLOADER_ID, null, reviewLoader);
 
@@ -146,6 +163,12 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, R.string.error_movie_details, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean isFavorite() {
+        return false;
+        //TODO call contentprovider and see if this movie is in  the list of favorites
+
     }
 
 

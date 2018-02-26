@@ -35,7 +35,9 @@ public class TrailerAsyncTaskLoader extends AsyncTaskLoader<ArrayList<Trailer>> 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        if (jsonResults == null) {
+            return null;
+        }
         ArrayList<Trailer> trailerList = null;
         try {
             trailerList = NetworkUtils.parseTrailerJsonResults(jsonResults);
