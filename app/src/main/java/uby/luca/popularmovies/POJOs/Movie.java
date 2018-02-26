@@ -1,4 +1,4 @@
-package uby.luca.popularmovies;
+package uby.luca.popularmovies.POJOs;
 
 import android.os.Parcel;
 import android.os.Parcelable;

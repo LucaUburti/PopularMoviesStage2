@@ -1,4 +1,4 @@
-package uby.luca.popularmovies;
+package uby.luca.popularmovies.loaders;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +10,10 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import uby.luca.popularmovies.BuildConfig;
+import uby.luca.popularmovies.POJOs.Review;
+import uby.luca.popularmovies.utils.NetworkUtils;
 
 /**
  * Created by uburti on 25/02/2018.

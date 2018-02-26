@@ -1,31 +1,31 @@
-package uby.luca.popularmovies;
+package uby.luca.popularmovies.POJOs;
 
 /**
  * Created by uburti on 25/02/2018.
  */
 
-class Trailer {
+public class Trailer {
     String key;
     String name;
 
-    Trailer(String key, String name) {
+    public Trailer(String key, String name) {
         this.key = key;
         this.name = name;
     }
 
-    String getKey() {
+    public String getKey() {
         return key;
     }
 
-    void setKey(String key) {
+    public void setKey(String key) {
         this.key = key;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 }

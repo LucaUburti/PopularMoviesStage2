@@ -21,6 +21,14 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uby.luca.popularmovies.POJOs.Movie;
+import uby.luca.popularmovies.POJOs.Review;
+import uby.luca.popularmovies.POJOs.Trailer;
+import uby.luca.popularmovies.adapters.MovieAdapter;
+import uby.luca.popularmovies.adapters.ReviewAdapter;
+import uby.luca.popularmovies.adapters.TrailerAdapter;
+import uby.luca.popularmovies.loaders.ReviewAsyncTaskLoader;
+import uby.luca.popularmovies.loaders.TrailerAsyncTaskLoader;
 
 public class DetailActivity extends AppCompatActivity {
     Movie movie;

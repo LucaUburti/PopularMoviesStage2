@@ -1,4 +1,4 @@
-package uby.luca.popularmovies;
+package uby.luca.popularmovies.utils;
 
 import android.net.Uri;
 import android.util.Log;
@@ -16,13 +16,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import uby.luca.popularmovies.MainActivity;
+import uby.luca.popularmovies.POJOs.Movie;
+import uby.luca.popularmovies.POJOs.Review;
+import uby.luca.popularmovies.POJOs.Trailer;
+
 import static android.content.ContentValues.TAG;
 
 /**
  * Created by uburti on 19/02/2018.
  */
 
-class NetworkUtils {
+public class NetworkUtils {
     //private static final String THE_MOVIE_DATABASE_URL = "https://api.themoviedb.org/3/discover/movie"; wrong endpoint!
     private static final String THE_MOVIE_DATABASE_URL = "https://api.themoviedb.org/3/movie";
 

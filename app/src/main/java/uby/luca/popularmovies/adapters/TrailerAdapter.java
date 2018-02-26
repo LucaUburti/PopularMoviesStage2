@@ -1,4 +1,4 @@
-package uby.luca.popularmovies;
+package uby.luca.popularmovies.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,13 +16,16 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import uby.luca.popularmovies.POJOs.Trailer;
+import uby.luca.popularmovies.R;
+
 import static android.content.ContentValues.TAG;
 
 /**
  * Created by uburti on 25/02/2018.
  */
 
-public class TrailerAdapter extends RecyclerView.Adapter<uby.luca.popularmovies.TrailerAdapter.TrailerHolder> {
+public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerHolder> {
     private ArrayList<Trailer> trailerList;
     private Context mContext;
 
@@ -30,7 +33,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<uby.luca.popularmovies.
         this.mContext = context;
     }
 
-    void add(ArrayList<Trailer> trailerList) {
+    public void add(ArrayList<Trailer> trailerList) {
         this.trailerList = trailerList;
         notifyDataSetChanged();
     }
@@ -64,7 +67,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<uby.luca.popularmovies.
         ImageView trailerThumbnailIv;
         TextView trailerNameTv;
 
-        public TrailerHolder(View trailerView) {
+        TrailerHolder(View trailerView) {
             super(trailerView);
             trailerThumbnailIv = trailerView.findViewById(R.id.trailer_thumbnail_iv);
             trailerNameTv = trailerView.findViewById(R.id.trailer_name_tv);

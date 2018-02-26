@@ -1,41 +1,41 @@
-package uby.luca.popularmovies;
+package uby.luca.popularmovies.POJOs;
 
 /**
  * Created by uburti on 25/02/2018.
  */
 
-class Review {
+public class Review {
     String author;
     String content;
     String url;
 
-    Review(String author, String content, String url) {
+    public Review(String author, String content, String url) {
         this.author = author;
         this.content = content;
         this.url = url;
     }
 
-    String getAuthor() {
+    public String getAuthor() {
         return author;
     }
 
-    void setAuthor(String author) {
+    public void setAuthor(String author) {
         this.author = author;
     }
 
-    String getContent() {
+    public String getContent() {
         return content;
     }
 
-    void setContent(String content) {
+    public void setContent(String content) {
         this.content = content;
     }
 
-    String getUrl() {
+    public String getUrl() {
         return url;
     }
 
-    void setUrl(String url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 }

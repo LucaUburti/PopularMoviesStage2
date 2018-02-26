@@ -1,4 +1,4 @@
-package uby.luca.popularmovies;
+package uby.luca.popularmovies.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import uby.luca.popularmovies.POJOs.Review;
+import uby.luca.popularmovies.R;
 
 /**
  * Created by uburti on 25/02/2018.
@@ -21,7 +24,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHold
         this.mContext = context;
     }
 
-    void add(ArrayList<Review> reviewList) {
+    public void add(ArrayList<Review> reviewList) {
         this.reviewList = reviewList;
         notifyDataSetChanged();
     }

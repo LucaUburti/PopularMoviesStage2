@@ -1,6 +1,7 @@
-package uby.luca.popularmovies;
+package uby.luca.popularmovies.adapters;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,22 +10,23 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import uby.luca.popularmovies.POJOs.Movie;
+import uby.luca.popularmovies.R;
 
 
 /**
  * Created by uburti on 18/02/2018.
  */
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder> {
+public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdapter.MovieHolder> {
 
-    private ArrayList<Movie> movieList = new ArrayList<>();
+    private Cursor movieCursor;
     private Context mContext;
     static final String PARCELED_MOVIE = "parceledMovie";
 
     private final MovieOnClickHandler movieOnClickHandler;
 
-    MovieAdapter(Context context, MovieOnClickHandler movieOnClickHandler) {
+    public FavoriteMovieAdapter(Context context, MovieOnClickHandler movieOnClickHandler) {
         this.mContext = context;
         this.movieOnClickHandler = movieOnClickHandler;
     }
@@ -34,13 +36,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         void movieOnClickImplementation(Movie clickedMovie);
     }
 
-    void add(Movie movie) { //single movie added
-        movieList.add(movie);
-        notifyItemInserted(movieList.size() - 1);
-    }
-
-    void add(ArrayList<Movie> movieList) { //whole list added
-        this.movieList = movieList;
+    public void add(Cursor movieCursor) {
+        this.movieCursor = movieCursor;
         notifyDataSetChanged();
     }
 
@@ -52,11 +49,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
     @Override
     public void onBindViewHolder(MovieHolder holder, int position) {
-        Movie movie = movieList.get(position);
+        String title = movieCursor.getString(movieCursor.getColumnIndex("title")); //TODO replace this string
+        String poster = movieCursor.getString(movieCursor.getColumnIndex("poster")); //TODO replace this string
 
-        holder.movieIv.setContentDescription(movie.getTitle());
+
+        holder.movieIv.setContentDescription(title);
         Picasso.with(mContext)
-                .load(movie.getPoster())
+                .load(poster)
                 .placeholder(R.drawable.loading_popcorn)
                 .error(R.drawable.img_not_found)
                 .into(holder.movieIv);
@@ -64,7 +63,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
     @Override
     public int getItemCount() {
-        return movieList.size();
+        return movieCursor.getCount();
     }
 
     class MovieHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -78,7 +77,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
         @Override
         public void onClick(View v) {
-            movieOnClickHandler.movieOnClickImplementation(movieList.get(getAdapterPosition()));
+            String movieId= movieCursor.getString(movieCursor.getColumnIndex("movieId")); //TODO replace this string
+            //... repeat for "movieId","title","poster","voteAverage","plot","releaseDate"
+            Movie clickedMovie=new Movie("movieId","title","poster","voteAverage","plot","releaseDate");
+
+            movieOnClickHandler.movieOnClickImplementation(clickedMovie);
         }
     }
 }
