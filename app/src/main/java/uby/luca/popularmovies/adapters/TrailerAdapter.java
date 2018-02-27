@@ -26,6 +26,7 @@ import uby.luca.popularmovies.R;
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerHolder> {
     private ArrayList<Trailer> trailerList;
     private Context mContext;
+    private String YOUTUBE_BASE_URL="http://www.youtube.com/watch?v=";
 
     public TrailerAdapter(Context context) {
         this.mContext = context;
@@ -61,6 +62,15 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerH
         return trailerList.size();
     }
 
+    public String getFirstTrailerUrl() {
+        if (trailerList != null) {
+            if (trailerList.size() > 0) {
+                return  YOUTUBE_BASE_URL + trailerList.get(0).getKey();
+            }
+        }
+        return null;
+    }
+
     public class TrailerHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView trailerThumbnailIv;
         TextView trailerNameTv;
@@ -75,7 +85,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerH
         @Override
         public void onClick(View v) {
             String key = trailerList.get(getAdapterPosition()).getKey();
-            String trailerYoutubeUrl = "http://www.youtube.com/watch?v=" + key;
+            String trailerYoutubeUrl = YOUTUBE_BASE_URL + key;
             Log.d("TrailerAdapter", "onClick: " + trailerYoutubeUrl);
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerYoutubeUrl));
             if (i.resolveActivity(mContext.getPackageManager()) != null) {

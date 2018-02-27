@@ -14,4 +14,14 @@
     <string name="removed_from_favorites">Movie removed from favorites</string>
     <string name="added_to_favorites">Movie added to favorites</string>
     <string name="no_favorites_yet">No favorite movies found</string>
+    <string name="share_movie">Share this movie</string>
+    <string name="share_intro">Check out this movie!</string>
+    <string name="share_title">Movie Name</string>
+    <string name="share_description">Plot</string>
+    <string name="share_vote">Average Vote</string>
+    <string name="share_releaseDate">Release Date</string>
+    <string name="share_trailer">Trailer</string>
+    <string name="reviews_header">USER REVIEWS</string>
+    <string name="trailers_header">TRAILERS</string>
+    <string name="share_outro">Sent with</string>
 </resources>

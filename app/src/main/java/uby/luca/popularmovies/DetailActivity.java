@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +14,16 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -51,11 +56,15 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.average_vote_tv)
     TextView averageVoteTv;
     @BindView(R.id.release_date_tv)
-    TextView releaseDate;
+    TextView releaseDateTv;
     @BindView(R.id.trailer_rv)
     RecyclerView trailerRv;
+    @BindView(R.id.trailer_header_tv)
+    TextView trailerHeaderTv;
     @BindView(R.id.review_rv)
     RecyclerView reviewRv;
+    @BindView(R.id.review_header_tv)
+    TextView reviewHeaderTv;
     @BindView(R.id.fav_iv)
     ImageView favIv;
 
@@ -73,7 +82,11 @@ public class DetailActivity extends AppCompatActivity {
             } else {
                 trailerAdapter.add(data);
                 Log.d("DetailActivity", "number of trailers found:" + data.size());
-
+                if (trailerAdapter.getItemCount()==0) {
+                    trailerHeaderTv.setVisibility(View.INVISIBLE);
+                } else {
+                    trailerHeaderTv.setVisibility(View.VISIBLE);
+                }
                 trailerRv.setAdapter(trailerAdapter);
 
             }
@@ -96,6 +109,11 @@ public class DetailActivity extends AppCompatActivity {
                 Toast.makeText(context, R.string.returned_data_is_null, Toast.LENGTH_SHORT).show();
             } else {
                 reviewAdapter.add(data);
+                if (reviewAdapter.getItemCount()==0) {
+                    reviewHeaderTv.setVisibility(View.INVISIBLE);
+                } else {
+                    reviewHeaderTv.setVisibility(View.VISIBLE);
+                }
                 Log.d("DetailActivity", "number of reviews found:" + data.size());
                 reviewRv.setAdapter(reviewAdapter);
             }
@@ -131,7 +149,7 @@ public class DetailActivity extends AppCompatActivity {
                 averageVoteTv.setText(formattedVote);
 
                 String formattedDate = movie.getReleaseDate().replace("-", "/");
-                releaseDate.setText(formattedDate);
+                releaseDateTv.setText(formattedDate);
 
                 posterIv.setContentDescription(movie.getTitle());
                 Picasso.with(this)
@@ -213,5 +231,40 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.share_menu, menu);
+        return true;
+    }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_share:
+                String delimiter=": ";
+                String intro = getString(R.string.share_intro)+delimiter+"\n\n";
+                String title= getString(R.string.share_title)+delimiter+titleTv.getText().toString()+"\n\n";
+                String description =getString(R.string.share_description)+delimiter+descriptionTv.getText().toString()+"\n\n";
+                String vote=getString(R.string.share_vote)+delimiter+averageVoteTv.getText().toString()+"\n";
+                String releaseDate=getString(R.string.share_releaseDate)+delimiter+ releaseDateTv.getText().toString()+"\n\n";
+                String firstTrailerUrl="";
+                if (trailerAdapter.getFirstTrailerUrl()!=null){
+                    firstTrailerUrl=getString(R.string.share_trailer) +delimiter+ trailerAdapter.getFirstTrailerUrl()+"\n\n";
+                }
+                String outro="\n\n"+getString(R.string.share_outro) +delimiter+getString(R.string.app_name);
+
+                String textToShare=intro+title+description+vote+releaseDate+firstTrailerUrl+outro;
+
+                Intent shareIntent = ShareCompat.IntentBuilder.from(this)
+                        .setChooserTitle(R.string.app_name)
+                        .setType("text/rtf")
+                        .setText(textToShare)
+                        .getIntent();
+
+                if (shareIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(shareIntent);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
