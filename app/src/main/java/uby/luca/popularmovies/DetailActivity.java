@@ -178,6 +178,7 @@ public class DetailActivity extends AppCompatActivity {
                 trailerAdapter = new TrailerAdapter(this);
 
                 reviewRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+                reviewRv.setNestedScrollingEnabled(false);  //https://stackoverflow.com/questions/33143485/recyclerview-inside-scrollview-not-scrolling-smoothly
                 reviewAdapter = new ReviewAdapter(this);
 
                 getSupportLoaderManager().initLoader(TRAILERLOADER_ID, null, trailerLoader);
