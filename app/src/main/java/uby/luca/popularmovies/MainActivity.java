@@ -30,26 +30,45 @@ import uby.luca.popularmovies.POJOs.Movie;
 
 import static uby.luca.popularmovies.adapters.MovieAdapter.PARCELED_MOVIE;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Movie>>, MovieAdapter.MovieOnClickHandler, FavoriteMovieAdapter.MovieOnClickHandler {
-
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieOnClickHandler, FavoriteMovieAdapter.MovieOnClickHandler {
     @BindView(R.id.main_rv)
     RecyclerView mainRv;
     public static final int HIGHEST_RATED = 1;
     public static final int MOST_POPULAR = 2;
     public static final int FAVORITES = 3;
     private int sortOrder = MOST_POPULAR;//default sort order
-    private static final String SORT_KEY ="sortOrder";
-
-    private final int LOADER_ID = 37;
+    private static final String SORT_KEY = "sortOrder";
+    GridLayoutManager layoutManager;
+    private final int ONLINE_LOADER_ID = 37;
     private final int FAVORITE_LOADER_ID = 38;
-
-
-    private MovieAdapter mAdapter;
-    private FavoriteMovieAdapter mFavoriteAdapter;
+    private MovieAdapter onlineAdapter;
+    private FavoriteMovieAdapter favoriteAdapter;
     private Context mContext = this;
 
-    private LoaderManager.LoaderCallbacks<Cursor> favoritesLoader = new LoaderManager.LoaderCallbacks<Cursor>() {
+    private LoaderManager.LoaderCallbacks<ArrayList<Movie>> onlineLoader = new LoaderManager.LoaderCallbacks<ArrayList<Movie>>() {    //https://stackoverflow.com/questions/15643907/multiple-loaders-in-same-activity
+        @Override
+        public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
+            return new MovieAsyncTaskLoader(mContext, sortOrder);
+        }
 
+        @Override
+        public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
+            if (data == null) {
+                Toast.makeText(mContext, R.string.returned_data_is_null, Toast.LENGTH_SHORT).show();
+            } else {
+                onlineAdapter.add(data);
+                mainRv.setAdapter(onlineAdapter);
+                Log.d("MainActivity", "onlineLoader finished loading");
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
+        }
+    };
+
+
+    private LoaderManager.LoaderCallbacks<Cursor> favoritesLoader = new LoaderManager.LoaderCallbacks<Cursor>() {
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             return new CursorLoader(mContext, MovieContract.MovieEntry.CONTENT_URI, null, null, null, null);
@@ -60,11 +79,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             if (data == null) {
                 Toast.makeText(mContext, R.string.returned_cursor_is_null, Toast.LENGTH_SHORT).show();
             } else {
-                mFavoriteAdapter.add(data);
-                mainRv.setAdapter(mFavoriteAdapter);
+                favoriteAdapter.add(data);
+                mainRv.setAdapter(favoriteAdapter);
                 if (data.getCount() == 0) {
                     Toast.makeText(mContext, R.string.no_favorites_yet, Toast.LENGTH_SHORT).show();
                 }
+                Log.d("MainActivity", "favoritesLoader finished loading");
             }
         }
 
@@ -73,24 +93,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        if (savedInstanceState!=null){
-            if (savedInstanceState.containsKey(SORT_KEY)){
-                sortOrder=(savedInstanceState.getInt(SORT_KEY)); //on rotation remember the last sorting criteria we used
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(SORT_KEY)) {
+                sortOrder = (savedInstanceState.getInt(SORT_KEY)); //on rotation remember the last sorting criteria we used
             }
         }
 
-
-        GridLayoutManager layoutManager;
-
-        // from Stack Overflow:
-        //https://stackoverflow.com/questions/3663665/how-can-i-get-the-current-screen-orientation
-        int orientation = this.getResources().getConfiguration().orientation;
+        int orientation = this.getResources().getConfiguration().orientation;   // from Stack Overflow: https://stackoverflow.com/questions/3663665/how-can-i-get-the-current-screen-orientation
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             layoutManager = new GridLayoutManager(this, 2);
         } else {
@@ -98,17 +113,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         mainRv.setLayoutManager(layoutManager);
-        mAdapter = new MovieAdapter(this, this);
-        mFavoriteAdapter = new FavoriteMovieAdapter(this, this);
+        onlineAdapter = new MovieAdapter(this, this);
+        favoriteAdapter = new FavoriteMovieAdapter(this, this);
 
         if (!isOnline()) {
             Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show();
         } else {
-            if (sortOrder == HIGHEST_RATED|| sortOrder== MOST_POPULAR) {    //check to see which loader we need to use, needed to avoid jumping to another sorting criteria after rotations
-                Log.d("MainActivity","initLoader default");
-                getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+            if (sortOrder == HIGHEST_RATED || sortOrder == MOST_POPULAR) {    //check to see which loader we need to use, needed to avoid jumping to another sorting criteria after rotations
+                getSupportLoaderManager().initLoader(ONLINE_LOADER_ID, null, onlineLoader);
             } else {
-                Log.d("MainActivity","initLoader favorites");
                 getSupportLoaderManager().initLoader(FAVORITE_LOADER_ID, null, favoritesLoader);
             }
         }
@@ -121,7 +134,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -130,8 +142,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 if (!isOnline()) {
                     Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show();
                 } else {
-                    Log.d("MainActivity","restartLoader default");
-                    getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+                    if (getSupportLoaderManager().getLoader(FAVORITE_LOADER_ID) != null) {
+                        Log.d("MainActivity", "Calling online loader, stopping favorite loader");
+                        getSupportLoaderManager().destroyLoader(FAVORITE_LOADER_ID);    //if switching to a different Loader, check if the other Loader is still running and stop it. Prevents the wrong Loader returning data when coming back from DetailActivity
+                    }
+                    getSupportLoaderManager().restartLoader(ONLINE_LOADER_ID, null, onlineLoader);
                 }
                 return true;
             case R.id.menu_most_popular:
@@ -139,13 +154,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 if (!isOnline()) {
                     Toast.makeText(this, R.string.not_connected, Toast.LENGTH_LONG).show();
                 } else {
-                    Log.d("MainActivity","restartLoader default");
-                    getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+                    if (getSupportLoaderManager().getLoader(FAVORITE_LOADER_ID) != null) {
+                        Log.d("MainActivity", "Calling online loader, stopping favorite loader");
+                        getSupportLoaderManager().destroyLoader(FAVORITE_LOADER_ID);
+                    }
+                    getSupportLoaderManager().restartLoader(ONLINE_LOADER_ID, null, onlineLoader);
                 }
                 return true;
             case R.id.favorites:
                 sortOrder = FAVORITES;
-                Log.d("MainActivity","restartLoader favorite");
+                if (getSupportLoaderManager().getLoader(ONLINE_LOADER_ID) != null) {
+                    Log.d("MainActivity", "Calling favorite loader, stopping online loader");
+                    getSupportLoaderManager().destroyLoader(ONLINE_LOADER_ID);
+                }
                 getSupportLoaderManager().restartLoader(FAVORITE_LOADER_ID, null, favoritesLoader);
                 return true;
             default:
@@ -153,28 +174,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    @Override
-    public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
-        return new MovieAsyncTaskLoader(this, sortOrder);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
-        if (data == null) {
-            Toast.makeText(this, R.string.returned_data_is_null, Toast.LENGTH_SHORT).show();
-        } else {
-            mAdapter.add(data);
-            mainRv.setAdapter(mAdapter);
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
-    }
-
-    // from Stack Overflow:
-    //    https://stackoverflow.com/questions/1560788/how-to-check-internet-access-on-android-inetaddress-never-times-out
-    private boolean isOnline() {
+    private boolean isOnline() {        // from Stack Overflow: https://stackoverflow.com/questions/1560788/how-to-check-internet-access-on-android-inetaddress-never-times-out
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = null;
@@ -187,9 +187,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(SORT_KEY,sortOrder);
+        outState.putInt(SORT_KEY, sortOrder);
     }
-
 
     @Override
     public void movieOnClickImplementation(Movie clickedMovie) {
